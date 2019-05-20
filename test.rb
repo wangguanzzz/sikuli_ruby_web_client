@@ -7,6 +7,6 @@ Rukuli::Config.run do |config|
 end
 
 screen = Rukuli::Screen.new
-screen.click('bin.png')
+#puts screen.methods
 screen.double_click(10, 10) # should open your apple menu
 #puts screen.methods

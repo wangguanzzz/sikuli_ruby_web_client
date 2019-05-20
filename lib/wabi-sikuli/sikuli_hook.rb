@@ -1,3 +1,3 @@
 Before do |scenario|
-    @screen = Rukuli::Screen.new
+    @sikuli = Sikuli.new
 end
