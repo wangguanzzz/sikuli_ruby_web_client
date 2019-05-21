@@ -2,6 +2,7 @@ require 'java'
 require 'rukuli'
 require 'csv'
 require 'json'
+require 'wabi-sikuli/screenshot'
 
 class Sikuli
   attr_accessor :map, :screen
@@ -25,6 +26,14 @@ class Sikuli
         name,type,x,y = arr
         @map[name] = {type: :cordinate, x: x.to_i, y: y.to_i}
       end
+      if type.downcase == 'region'
+        name,type,x1,y1,x2,y2 = arr
+        x1 = x1.to_i
+        y1 = y1.to_i
+        x2 = x2.to_i
+        y2 = y2.to_i
+        @map[name] = {type: :region, x1: x1, y1: y1, x2: x2, y2: y2, x: (x1+x2)/2, y: (y1+y2)/2 }
+      end
     end
     $world.puts "Sikuli file #{base_dir}/#{name}.csv is loaded" if $world
   end
@@ -37,6 +46,12 @@ class Sikuli
     if obj[:type] == :cordinate
         return [obj[:x],obj[:y]]
     end
+    if obj[:type] == :region
+      create_screen_shot("regions/"+obj_name+".png", obj[:x1],obj[:y1],obj[:x2],obj[:y2])
+      $world.puts "region #{obj_name} is saved" if $world
+      $world.puts "[screenshot] regions/#{obj_name}.png" if $world
+      return [obj[:x],obj[:y]]
+  end
   end
 end
 
