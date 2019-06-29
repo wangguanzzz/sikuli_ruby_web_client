@@ -22,6 +22,11 @@ class Sikuli
         name,type,url = arr
         @map[name] = {type: :picture, url: url}
       end
+      if type.downcase == 'picoffset'
+        name,type,url,offx,offy = arr
+        @map[name] = {type: :picoffset,url: url, offx: offx.to_i, offy: offy.to_i}
+      end
+
       if type.downcase == 'cordinate'
         name,type,x,y = arr
         @map[name] = {type: :cordinate, x: x.to_i, y: y.to_i}
@@ -38,6 +43,7 @@ class Sikuli
     $world.puts "Sikuli file #{base_dir}/#{name}.csv is loaded" if $world
   end
 
+
   def get_parameter_from_obj(obj_name)
     obj= @map[obj_name]
     if obj[:type] == :picture
@@ -51,7 +57,13 @@ class Sikuli
       $world.puts "region #{obj_name} is saved" if $world
       $world.puts "[screenshot] regions/#{obj_name}.png" if $world
       return [obj[:x],obj[:y]]
-  end
+    end
+    if obj[:type] == :picoffset
+      res = @screen.find obj[:url]
+      newx = res.x + res.width/2 + obj[:offx]
+      newy = res.y + res.height/2 + obj[:offy]
+      return [newx,newy]
+    end
   end
 end
 
